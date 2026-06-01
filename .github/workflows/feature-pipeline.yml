@@ -10,7 +10,7 @@ permissions:
 
 concurrency:
   group: aqi-feature-pipeline
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   run-pipeline:
@@ -46,12 +46,12 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
+          git pull --rebase origin main
+
           git add aqi_historical_data.csv
 
           git diff --cached --quiet && echo "No changes to commit" && exit 0
 
           git commit -m "auto-update: fetch latest Karachi AQI data"
-
-          git pull --rebase origin main
 
           git push
