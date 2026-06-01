@@ -6,12 +6,18 @@ on:
     - cron: '0 */3 * * *'
   workflow_dispatch: # Allows manual trigger from GitHub UI
 
+permissions:
+  contents: write
+
 jobs:
   run-pipeline:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -35,6 +41,9 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
           git add aqi_historical_data.csv
+
           git diff-index --quiet HEAD || git commit -m "auto-update: fetch latest Karachi AQI data"
-          git push
+
+          git push origin main
