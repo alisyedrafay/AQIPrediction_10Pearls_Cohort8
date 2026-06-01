@@ -2,12 +2,15 @@ name: AQI Feature Scraper Pipeline
 
 on:
   schedule:
-    # Run every 3 hours
     - cron: '0 */3 * * *'
   workflow_dispatch:
 
 permissions:
   contents: write
+
+concurrency:
+  group: aqi-feature-pipeline
+  cancel-in-progress: true
 
 jobs:
   run-pipeline:
@@ -45,8 +48,10 @@ jobs:
 
           git add aqi_historical_data.csv
 
-          git diff-index --quiet HEAD || git commit -m "auto-update: fetch latest Karachi AQI data"
+          git diff --cached --quiet && echo "No changes to commit" && exit 0
 
-          git pull origin main --rebase
+          git commit -m "auto-update: fetch latest Karachi AQI data"
 
-          git push origin HEAD:main
+          git pull --rebase origin main
+
+          git push
