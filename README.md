@@ -1,3 +1,5 @@
+Live App Link
+https://aqiprediction10pearlscohort8-39ugcgw4twkrwzse4vidpk.streamlit.app/
 # AQIPrediction_10Pearls_Cohort8
 
 ## Overview
